@@ -1,0 +1,23 @@
+# Simulation and physical-design outputs
+/build/
+INCA_libs/
+.simvision/
+*.shm/
+*.vcd
+*.def
+*.gds
+*.enc.dat/
+
+# Generated synthesis and implementation artifacts
+/syn/*.rpt
+/syn/*_netlist.v
+/syn/rc.*
+/syn/fv/
+/syn/.tdrlog
+/syn/timingReports/
+/syn/encounter.log*
+/syn/encounter.cmd*
+
+# General tool logs
+*.log
+*.log.*
