@@ -4,11 +4,11 @@
 module instruction_decoder (
     input  wire [7:0] opcode,
     output wire recognized,
-    output wire [15:0] controls
+    output wire [16:0] controls
 );
-    wire [16:0] nop_word, movi_word, mov_word, add_word, sub_word, cmp_word;
-    wire [16:0] load_word, store_word, jmp_word, beq_word, bne_word;
-    wire [16:0] in_word, out_word, halt_word;
+    wire [17:0] nop_word, movi_word, mov_word, add_word, sub_word, cmp_word;
+    wire [17:0] load_word, store_word, jmp_word, beq_word, bne_word;
+    wire [17:0] in_word, out_word, halt_word;
 
     instruction_nop i_nop(
         .opcode(opcode), .decoded(nop_word)
@@ -53,11 +53,11 @@ module instruction_decoder (
         .opcode(opcode), .decoded(halt_word)
     );
 
-    wire [16:0] decoded = nop_word | movi_word | mov_word | add_word |
+    wire [17:0] decoded = nop_word | movi_word | mov_word | add_word |
                           sub_word | cmp_word | load_word | store_word |
                           jmp_word | beq_word | bne_word | in_word |
                           out_word | halt_word;
 
-    assign recognized = decoded[16];
-    assign controls = decoded[15:0];
+    assign recognized = decoded[17];
+    assign controls = decoded[16:0];
 endmodule

@@ -36,4 +36,4 @@ make clean          # Remove generated files
 | `0A`   | BNE         | Branch if not equal                 |
 | `0B`   | IN          | Input pins to register              |
 | `0C`   | OUT         | Register to output pins             |
-| `0D`   | HALT        | Stop execution                      |
+| `FF`   | HALT        | Stop execution                      |

@@ -12,6 +12,7 @@ RTL_SOURCES := \
 	rtl/memory/flags.v \
 	rtl/memory/output_register.v \
 	rtl/execute/alu.v \
+	rtl/execute/branch_unit.v \
 	rtl/execute/datapath.v \
 	rtl/control_unit/instructions/00_nop.v \
 	rtl/control_unit/instructions/01_movi.v \
@@ -26,7 +27,7 @@ RTL_SOURCES := \
 	rtl/control_unit/instructions/10_bne.v \
 	rtl/control_unit/instructions/11_in.v \
 	rtl/control_unit/instructions/12_out.v \
-	rtl/control_unit/instructions/13_halt.v \
+	rtl/control_unit/instructions/255_halt.v \
 	rtl/control_unit/instruction_decoder.v \
 	rtl/control_unit/controller.v \
 	rtl/control_unit/control_unit.v \

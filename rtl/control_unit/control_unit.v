@@ -24,31 +24,31 @@ module control_unit (
 );
     wire [7:0] opcode;
     wire recognized, fetch, execute, load_wait;
-    wire [15:0] controls;
+    wire [16:0] controls;
     wire zero_flag;
-    localparam CTRL_REGWRITE = 0;
-    localparam CTRL_WB_LSB = 1;
-    localparam CTRL_WB_MSB = 3;
-    localparam CTRL_ALU_LSB = 4;
-    localparam CTRL_ALU_MSB = 7;
-    localparam CTRL_RAMWRITE = 8;
-    localparam CTRL_PINWRITE = 9;
-    localparam CTRL_FLAGWRITE = 10;
-    localparam CTRL_LOAD = 11;
-    localparam CTRL_JUMP = 12;
-    localparam CTRL_BEQ = 13;
-    localparam CTRL_BNE = 14;
-    localparam CTRL_HALT = 15;
+    localparam CTRL_HALT = 16;
+    localparam CTRL_LOAD = 15;
+    localparam CTRL_FLAGWRITE = 14;
+    localparam CTRL_PINWRITE = 13;
+    localparam CTRL_RAMWRITE = 12;
+    localparam CTRL_REGWRITE = 11;
+    localparam CTRL_BRANCH_MSB = 10;
+    localparam CTRL_BRANCH_LSB = 7;
+    localparam CTRL_ALU_MSB = 6;
+    localparam CTRL_ALU_LSB = 3;
+    localparam CTRL_WB_MSB = 2;
+    localparam CTRL_WB_LSB = 0;
 
     wire is_halt = controls[CTRL_HALT];
-    wire is_store = controls[CTRL_RAMWRITE];
+    wire is_load_control = controls[CTRL_LOAD];
     wire is_compare = controls[CTRL_FLAGWRITE];
-    wire is_jump = controls[CTRL_JUMP];
-    wire is_beq = controls[CTRL_BEQ];
-    wire is_bne = controls[CTRL_BNE];
-    wire [2:0] writeback_select = controls[CTRL_WB_MSB:CTRL_WB_LSB];
+    wire is_output = controls[CTRL_PINWRITE];
+    wire is_store = controls[CTRL_RAMWRITE];
+    wire register_write = controls[CTRL_REGWRITE];
+    wire [3:0] branch_operation = controls[CTRL_BRANCH_MSB:CTRL_BRANCH_LSB];
     wire [3:0] alu_select = controls[CTRL_ALU_MSB:CTRL_ALU_LSB];
-    wire branch_taken = is_jump || (is_beq && zero_flag) || (is_bne && !zero_flag);
+    wire [2:0] writeback_select = controls[CTRL_WB_MSB:CTRL_WB_LSB];
+    wire branch_taken;
 
     instruction_register instruction(
         .clk(clk),
@@ -88,7 +88,13 @@ module control_unit (
         .zero(zero_flag)
     );
 
-    assign is_load = controls[CTRL_LOAD];
+    branch_unit branch_control(
+        .operation(branch_operation),
+        .zero_flag(zero_flag),
+        .taken(branch_taken)
+    );
+
+    assign is_load = is_load_control;
     assign pc_load_value = immediate[7:0];
 
     always @* begin
@@ -96,9 +102,9 @@ module control_unit (
         pc_load = execute && branch_taken;
         ram_address_pc = fetch;
         ram_write_enable = !reset && !halted && execute && is_store;
-        output_write_enable = !reset && !halted && execute && controls[CTRL_PINWRITE];
+        output_write_enable = !reset && !halted && execute && is_output;
 
-        register_write_enable = !reset && !halted && controls[CTRL_REGWRITE] && (load_wait || (execute && !is_load));
+        register_write_enable = !reset && !halted && register_write && (load_wait || (execute && !is_load));
         bus_select = writeback_select;
         alu_operation = alu_select;
     end

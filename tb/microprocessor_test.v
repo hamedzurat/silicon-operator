@@ -102,7 +102,7 @@ module microprocessor_test;
         // branch, a jump, RAM load/store, and input/output.
         assert (dut.program_rom.mem[0] === 32'h00000000 &&
                 dut.program_rom.mem[25] === 32'h07098000 &&
-                dut.program_rom.mem[33] === 32'h0d000000)
+                dut.program_rom.mem[33] === 32'hff000000)
             else $fatal(1, "ROM program image did not load correctly");
 
         $dumpfile("build/microprocessor.vcd");
@@ -135,7 +135,7 @@ module microprocessor_test;
         // in the first run, so OUT r1 must now produce zero.
         reset = 1'b1;
         dut.program_rom.mem[0] = instruction(8'h0c, 4'd0, 4'd1, 4'd0, 12'd0); // OUT r1
-        dut.program_rom.mem[1] = instruction(8'h0d, 4'd0, 4'd0, 4'd0, 12'd0); // HALT
+        dut.program_rom.mem[1] = instruction(8'hff, 4'd0, 4'd0, 4'd0, 12'd0); // HALT
         repeat (2) @(posedge clk);
         #1;
         assert (output_pins === 16'b0 && halted === 1'b0)
@@ -152,7 +152,7 @@ module microprocessor_test;
 
         // Reserved opcode behavior is deliberately deterministic.
         reset = 1'b1;
-        dut.program_rom.mem[0] = instruction(8'hff, 4'd0, 4'd0, 4'd0, 12'd0);
+        dut.program_rom.mem[0] = instruction(8'hfe, 4'd0, 4'd0, 4'd0, 12'd0);
         repeat (2) @(posedge clk);
         #1 reset = 1'b0;
         cycles = 0;
