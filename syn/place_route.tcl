@@ -11,7 +11,7 @@ init_design
 file mkdir $env(OUT)
 file mkdir $env(REPORTS)
 
-# Small educational core; no clock tree is needed for this combinational block.
+# Small educational core; this flow omits clock-tree synthesis.
 floorPlan -site CoreSite -r 1.0 0.70 10 10 10 10
 globalNetConnect VDD -type pgpin -pin VDD -inst * -override
 globalNetConnect VSS -type pgpin -pin VSS -inst * -override

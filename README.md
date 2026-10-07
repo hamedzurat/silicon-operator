@@ -1,5 +1,10 @@
 # silicon-operator
 
+Small, non-pipelined 32-bit integer CPU for an educational VLSI project.
+The CPU has 16 general-purpose registers, a 256 x 32-bit instruction ROM, a
+256 x 32-bit data RAM, fixed 16-bit input/output ports, and fixed 32-bit
+instructions with an 8-bit opcode field.
+
 ## Commands
 
 Run these in the Cadence VM:
@@ -14,12 +19,21 @@ make view-reports   # Read the combined reports
 make clean          # Remove generated files
 ```
 
-Set the design top, RTL file list, and testbench in `project.mk`. Update
-`syn/constraints.sdc` for the design's ports and timing.
+## Supported opcodes
 
-## What the flow does
-
-It runs the usual digital design path: RTL simulation, standard-cell synthesis,
-place and route, then reports and SVG previews. Outputs go under `build/`.
-This setup uses the VM's educational GPDK045 collateral. It does not produce
-valid GDSII or signoff DRC/LVS results.
+| Opcode | Instruction | Operation                           |
+| ------ | ----------- | ----------------------------------- |
+| `00`   | NOP         | No operation                        |
+| `01`   | MOVI        | Sign-extended immediate to register |
+| `02`   | MOV         | Copy register                       |
+| `03`   | ADD         | Add registers                       |
+| `04`   | SUB         | Subtract registers                  |
+| `05`   | CMP         | Set zero flag if equal              |
+| `06`   | LOAD        | RAM to register                     |
+| `07`   | STORE       | Register to RAM                     |
+| `08`   | JMP         | Absolute jump                       |
+| `09`   | BEQ         | Branch if equal                     |
+| `0A`   | BNE         | Branch if not equal                 |
+| `0B`   | IN          | Input pins to register              |
+| `0C`   | OUT         | Register to output pins             |
+| `0D`   | HALT        | Stop execution                      |

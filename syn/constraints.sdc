@@ -1,7 +1,6 @@
-# Virtual timing reference for this combinational block.
-create_clock -name virtual_clk -period 10 -waveform {0 5}
-set_clock_transition -rise 0.1 [get_clocks virtual_clk]
-set_clock_transition -fall 0.1 [get_clocks virtual_clk]
-set_clock_uncertainty 0.1 [get_clocks virtual_clk]
-set_input_delay -max 1.0 -clock [get_clocks virtual_clk] [get_ports {a b}]
-set_output_delay -max 1.0 -clock [get_clocks virtual_clk] [get_ports {sum carry}]
+create_clock -name cpu_clk -period 10 -waveform {0 5} [get_ports clk]
+set_clock_transition -rise 0.1 [get_clocks cpu_clk]
+set_clock_transition -fall 0.1 [get_clocks cpu_clk]
+set_clock_uncertainty 0.1 [get_clocks cpu_clk]
+set_input_delay -max 1.0 -clock [get_clocks cpu_clk] [get_ports {input_pins[*]}]
+set_output_delay -max 1.0 -clock [get_clocks cpu_clk] [get_ports {output_pins[*] halted}]

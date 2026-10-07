@@ -33,7 +33,7 @@ build: test
 	grep -q 'Total number of DRC violations = 0' syn/encounter.log
 	grep -q 'Total number of fails = 0' syn/encounter.log
 	grep -E 'Total wire length =|Total number of vias =|Total number of DRC violations =|Total number of fails =|Routing Overflow:|Density for the design' syn/encounter.log > $(REPORTS)/route.rpt
-	python tools/vcd_to_svg.py $(BUILD)/half_adder.vcd $(BUILD)/waveform.svg
+	python tools/vcd_to_svg.py $(BUILD)/microprocessor.vcd $(BUILD)/waveform.svg
 	python tools/def_to_svg.py $(PHYSICAL)/$(DESIGN).def \
 		$(PDK)/LIBS/GPDK045/gsclib045.lef $(PHYSICAL)/layout.svg
 	$(MAKE) reports
@@ -55,7 +55,7 @@ reports:
 	@echo 'Generated reports, waveform, and layout image under $(BUILD)/'
 
 view-sim:
-	simvision $(BUILD)/half_adder.vcd
+	simvision $(BUILD)/microprocessor.vcd
 
 view-schematic:
 	irun -clean -sv -access +rwc -gui -top $(SIM_TOP) $(RTL_SOURCES) $(TESTBENCH)
