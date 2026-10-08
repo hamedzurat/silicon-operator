@@ -50,6 +50,98 @@ activity file and uses the tool's default primary-input activity.
 
 ## Design diagrams
 
+### CPU architecture
+
+```mermaid
+flowchart LR
+    subgraph IOSystem[Input and output]
+        INPUT[Input devices] --> IN_IF[Input interface]
+        OUT_IF[Output interface] --> OUTPUT[Output devices]
+    end
+
+    subgraph CPUCore[CPU]
+        FETCH[Fetch instruction] --> DECODE[Decode instruction]
+        DECODE --> CONTROL[Control unit]
+        CONTROL --> EXECUTE[Execute operation]
+        EXECUTE --> WRITEBACK[Write result]
+        WRITEBACK --> FETCH
+        REGISTERS[Registers] <--> EXECUTE
+        ALU[ALU] <--> EXECUTE
+        PC[Program counter] --> FETCH
+        CONTROL --> BRANCH[Branch unit]
+        FLAGS[Status flags] --> BRANCH
+        BRANCH --> PC
+        EXECUTE --> FLAGS
+    end
+
+    subgraph Memory[Memory]
+        PROGRAM[ROM]
+        DATA[RAM]
+    end
+
+    subgraph Interconnect[System interconnect]
+        BUS[System bus]
+    end
+
+    IN_IF --> BUS
+    BUS --> OUT_IF
+    BUS <--> REGISTERS
+    PROGRAM --> FETCH
+    BUS <--> DATA
+    WRITEBACK --> BUS
+```
+
+### RTL architecture
+
+```mermaid
+flowchart LR
+    CLK[Clock and reset] --> CPU[Microprocessor]
+    CPU --> CU[Control unit]
+    CPU --> DP[Datapath]
+    CPU --> ROM[ROM]
+    CPU --> RAM[RAM]
+
+    subgraph Control[Control unit]
+        IR[Instruction register] --> DEC[Instruction decoder]
+        DEC --> SEQ[Fetch / execute controller]
+        SEQ --> CTL[Control signals]
+        ALU_EQ[ALU equality] --> FLAGS[Flags]
+        FLAGS --> BR[Branch unit]
+        BR --> CTL
+    end
+
+    subgraph Execute[Datapath]
+        PC[Program counter] --> ADDR[Address bus]
+        RF[Register file] --> ALU[ALU]
+        RF --> DBUS[Data bus]
+        ALU --> DBUS
+        DBUS --> RF
+        INPUT[16-bit input pins] --> DBUS
+        DBUS --> OUTREG[Output register]
+        OUTREG --> OUTPUT[16-bit output pins]
+    end
+
+    CTL --> IR
+    CTL --> PC
+    CTL --> RF
+    CTL --> ALU
+    CTL --> DBUS
+    CTL --> BR
+    CTL --> RAM
+    CTL --> ADDR
+    ADDR --> CPU
+    CPU --> ROM
+    ROM --> CPU
+    CPU --> RAM
+    RAM --> CPU
+    CPU --> IR
+    CPU --> DBUS
+    ALU --> ALU_EQ
+    RF --> RAM
+    CTL --> OUTREG
+    CPU --> HALTED[Halted status]
+```
+
 ### CPU layout
 
 ![Placed chip layout](assets/layout.png)
