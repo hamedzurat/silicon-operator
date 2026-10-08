@@ -9,21 +9,17 @@ instructions with an 8-bit opcode field.
 
 Run these in the Cadence VM:
 
-Place-and-route uses 2 cores by default to stay within the VM's memory limit;
-override with `make build CORES=N`.
-
 ```sh
 make test           # Simulate RTL and run the testbench
 make build          # Test, synthesize, place and route, then make reports and images
 make view-sim       # Open the waveform in SimVision
-make view-schematic # Open the RTL in SimVision's schematic tracer
+make view-schematic # Open the RTL schematic in RTL Compiler
 make view-layout    # Open the placed and routed design in Encounter
 make view-reports   # Read the combined reports
 make clean          # Remove generated files
 ```
 
-Simulation loads `tb/program.hex`; synthesis uses the fixed ROM case table in
-`rtl/memory/rom.v`. Keep the two program images in sync.
+Simulation and synthesis both load the instruction image from `tb/program.hex`.
 
 ## Supported opcodes
 

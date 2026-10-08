@@ -25,8 +25,8 @@ test:
 
 build: test
 	@mkdir -p $(SYNTH) $(REPORTS)
-	cd syn && DESIGN='$(DESIGN)' RTL_FILES='$(RTL_FILES)' LIBERTY='$(LIBERTY)' \
-		SDC='$(SDC)' OUT='$(abspath $(SYNTH))' rc -f synthesize.tcl
+	DESIGN='$(DESIGN)' RTL_FILES='$(RTL_FILES)' LIBERTY='$(LIBERTY)' \
+		SDC='$(SDC)' OUT='$(abspath $(SYNTH))' rc -f syn/synthesize.tcl
 	cd syn && DESIGN='$(DESIGN)' CORES='$(CORES)' NETLIST='$(NETLIST)' SDC='$(SDC)' \
 		PDK='$(PDK)' OUT='$(abspath $(PHYSICAL))' REPORTS='$(abspath $(REPORTS))' \
 		encounter -nowin -init place_route.tcl
@@ -59,7 +59,8 @@ view-sim:
 	simvision $(BUILD)/microprocessor.vcd
 
 view-schematic:
-	irun -clean -sv -access +rwc +define+SIMULATION -gui -top $(SIM_TOP) $(RTL_SOURCES) $(TESTBENCH)
+	DESIGN='$(DESIGN)' RTL_FILES='$(RTL_FILES)' LIBERTY='$(LIBERTY)' \
+		NETLIST='$(NETLIST)' rc -f syn/view_schematic.tcl
 
 view-layout:
 	cd syn && PNR_DB='$(abspath $(PHYSICAL)/$(DESIGN).enc.dat)' \
