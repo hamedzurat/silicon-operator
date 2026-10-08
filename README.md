@@ -109,7 +109,7 @@ Run these commands in the Cadence VM:
 
 ```sh
 make test           # Run the RTL testbench
-make build          # Test, synthesize, place and route, and generate reports/images
+make build          # Test, synthesize, place and route, and generate reports
 make view-sim       # Open the simulation waveform in SimVision
 make view-schematic # Open the synthesized schematic in RTL Compiler
 make view-layout    # Open the placed design in Encounter

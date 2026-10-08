@@ -34,9 +34,6 @@ build: test
 	grep -q 'Total number of DRC violations = 0' syn/encounter.log
 	grep -q 'Total number of fails = 0' syn/encounter.log
 	grep -E 'Total wire length =|Total number of vias =|Total number of DRC violations =|Total number of fails =|Routing Overflow:|Density for the design' syn/encounter.log > $(REPORTS)/route.rpt
-	python tools/vcd_to_svg.py $(BUILD)/microprocessor.vcd $(BUILD)/waveform.svg
-	python tools/def_to_svg.py $(PHYSICAL)/$(DESIGN).def \
-		$(PDK)/LIBS/GPDK045/gsclib045.lef $(PHYSICAL)/layout.svg
 	$(MAKE) reports
 
 reports:
@@ -53,7 +50,7 @@ reports:
 		echo '=== Post-route power ==='; cat $(REPORTS)/power.rpt; \
 		echo '=== Routing ==='; cat $(REPORTS)/route.rpt; \
 	} > $(BUILD)/reports.txt
-	@echo 'Generated reports, waveform, and layout image under $(BUILD)/'
+	@echo 'Generated reports under $(BUILD)/'
 
 view-sim:
 	simvision $(BUILD)/microprocessor.vcd
