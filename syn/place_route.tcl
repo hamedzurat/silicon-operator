@@ -1,4 +1,5 @@
 # Minimal educational place-and-route flow. Not a signoff flow.
+setMultiCpuUsage -localCpu $env(CORES)
 set init_verilog $env(NETLIST)
 set init_top_cell $env(DESIGN)
 set init_lef_file [list [file join $env(PDK) LIBS GPDK045 gsclib045.lef]]

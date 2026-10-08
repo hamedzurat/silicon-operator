@@ -7,6 +7,7 @@ BUILD := build
 SYNTH := $(BUILD)/synthesis
 PHYSICAL := $(BUILD)/physical
 REPORTS := $(PHYSICAL)/reports
+CORES ?= 2
 
 # Override EDI_ROOT when Cadence is installed elsewhere.
 EDI_ROOT ?= $(HOME)/cadence/EDI
@@ -19,14 +20,14 @@ NETLIST := $(abspath $(SYNTH)/$(DESIGN).v)
 
 test:
 	@mkdir -p $(BUILD)
-	irun -clean -sv -access +rwc -top $(SIM_TOP) -log $(BUILD)/simulation.log \
+	irun -clean -sv -access +rwc +define+SIMULATION -top $(SIM_TOP) -log $(BUILD)/simulation.log \
 		-input tb/run.tcl $(RTL_SOURCES) $(TESTBENCH)
 
 build: test
 	@mkdir -p $(SYNTH) $(REPORTS)
 	cd syn && DESIGN='$(DESIGN)' RTL_FILES='$(RTL_FILES)' LIBERTY='$(LIBERTY)' \
 		SDC='$(SDC)' OUT='$(abspath $(SYNTH))' rc -f synthesize.tcl
-	cd syn && DESIGN='$(DESIGN)' NETLIST='$(NETLIST)' SDC='$(SDC)' \
+	cd syn && DESIGN='$(DESIGN)' CORES='$(CORES)' NETLIST='$(NETLIST)' SDC='$(SDC)' \
 		PDK='$(PDK)' OUT='$(abspath $(PHYSICAL))' REPORTS='$(abspath $(REPORTS))' \
 		encounter -nowin -init place_route.tcl
 	! grep -q '\*\*ERROR' syn/encounter.log
@@ -58,7 +59,7 @@ view-sim:
 	simvision $(BUILD)/microprocessor.vcd
 
 view-schematic:
-	irun -clean -sv -access +rwc -gui -top $(SIM_TOP) $(RTL_SOURCES) $(TESTBENCH)
+	irun -clean -sv -access +rwc +define+SIMULATION -gui -top $(SIM_TOP) $(RTL_SOURCES) $(TESTBENCH)
 
 view-layout:
 	cd syn && PNR_DB='$(abspath $(PHYSICAL)/$(DESIGN).enc.dat)' \

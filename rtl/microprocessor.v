@@ -1,8 +1,6 @@
 `timescale 1ns/1ps
 
-module microprocessor #(
-    parameter PROGRAM_FILE = ""
-) (
+module microprocessor (
     input  wire        clk,
     input  wire        reset,
     input  wire [15:0] input_pins,
@@ -45,7 +43,7 @@ module microprocessor #(
         .halted(halted)
     );
 
-    rom #(.INIT_FILE(PROGRAM_FILE)) program_rom(
+    rom program_rom(
         .address(ram_address),
         .read_data(program_read_data)
     );

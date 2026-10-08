@@ -13,7 +13,7 @@ module microprocessor_test;
     wire [31:0] alu_result;
     wire alu_equal;
 
-    microprocessor #(.PROGRAM_FILE("tb/program.hex")) dut(
+    microprocessor dut(
         .clk(clk), .reset(reset), .input_pins(input_pins),
         .output_pins(output_pins), .halted(halted)
     );
